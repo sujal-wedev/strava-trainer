@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // DOM Elements
-  const navTabs = document.querySelectorAll('.nav-tab');
+  const navTabs = document.querySelectorAll('.nav-item, .nav-tab');
   const tabPanes = document.querySelectorAll('.tab-pane');
   const toastContainer = document.getElementById('toast-container');
   const modal = document.getElementById('activity-detail-modal');
@@ -214,9 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Activity filter buttons
-  document.querySelectorAll('#activity-sport-filters .filter-pill').forEach((btn) => {
+  document.querySelectorAll('#activity-sport-filters .filter-tab, #activity-sport-filters .filter-pill').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#activity-sport-filters .filter-pill').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('#activity-sport-filters .filter-tab, #activity-sport-filters .filter-pill').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       state.activeSportFilter = btn.dataset.sport;
       renderActivitiesList();
@@ -377,9 +377,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // PR Category filter pills
-  document.querySelectorAll('#pr-category-filters .filter-pill').forEach((btn) => {
+  document.querySelectorAll('#pr-category-filters .filter-tab, #pr-category-filters .filter-pill').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#pr-category-filters .filter-pill').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('#pr-category-filters .filter-tab, #pr-category-filters .filter-pill').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       state.activePrCategory = btn.dataset.cat;
       renderPRsBoard();
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Prompt chips
-  document.querySelectorAll('.prompt-chip').forEach((chip) => {
+  document.querySelectorAll('.chip-btn, .prompt-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const prompt = chip.dataset.prompt;
       if (prompt && chatInput) {
@@ -437,14 +437,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function appendChatMessage(sender, author, text) {
     const bubble = document.createElement('div');
-    bubble.className = `message-bubble ${sender}`;
+    bubble.className = `chat-entry ${sender}`;
     const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     bubble.innerHTML = `
-      <div class="bubble-header">
-        <span class="bubble-author">${author}</span>
-        <span class="bubble-time">${now}</span>
+      <div class="chat-meta">
+        <span class="sender-name">${author}</span>
+        <span class="message-time">${now}</span>
       </div>
-      <div class="bubble-content">${text}</div>
+      <div class="message-body">${text}</div>
     `;
     chatMessages.appendChild(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
