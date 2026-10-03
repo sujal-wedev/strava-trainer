@@ -1,94 +1,90 @@
 /* ==========================================================================
-   LIFTMATE // AI Hybrid Athlete Telemetry & Coach Design System
-   Modern Obsidian Dark Aesthetic with High-Energy Neon Accents
+   LiftMate — Professional Athletic Telemetry & SaaS Design System
+   Crafted with high typographic restraint, clean matte surfaces, and Strava accents.
    ========================================================================== */
 
 :root {
-  /* Color Palette */
-  --bg-deep: #0a0c10;
-  --bg-base: #10131a;
-  --bg-surface: #161a24;
-  --bg-surface-elevated: #1e2433;
-  --bg-surface-hover: #262c3e;
+  /* Neutral Color Palette (Matte Charcoal & Slate) */
+  --bg-app: #0b0d10;
+  --bg-surface: #12151b;
+  --bg-surface-elevated: #181c24;
+  --bg-surface-hover: #1f242f;
+  --bg-subtle: #252b37;
 
-  /* Glassmorphism */
-  --glass-bg: rgba(22, 26, 36, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(255, 255, 255, 0.16);
-  --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-
-  /* High Energy Brand Accents */
-  --accent-orange: #fc5200;       /* Strava Electric Orange */
-  --accent-orange-glow: rgba(252, 82, 0, 0.35);
-  --accent-cyan: #00f0ff;         /* Telemetry Cyan */
-  --accent-cyan-glow: rgba(0, 240, 255, 0.3);
-  --accent-green: #10b981;        /* PR Emerald */
-  --accent-green-glow: rgba(16, 185, 129, 0.3);
-  --accent-yellow: #f59e0b;       /* Workload Amber */
-  --accent-purple: #a855f7;       /* AI Violet */
-  --accent-red: #ef4444;          /* Heart Rate Zone 5 */
+  /* Borders & Dividers */
+  --border-subtle: #1e222b;
+  --border-default: #282e3b;
+  --border-focus: #fc5200;
 
   /* Text & Foreground */
-  --fg-primary: #f8fafc;
-  --fg-secondary: #94a3b8;
-  --fg-muted: #64748b;
-  --fg-dim: #475569;
+  --text-main: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-faint: #475569;
+
+  /* Athletic Accent Colors */
+  --strava-orange: #fc5200;
+  --strava-orange-hover: #e04800;
+  --strava-orange-subtle: rgba(252, 82, 0, 0.12);
+
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.12);
+  --color-highlight: #38bdf8;
+  --color-highlight-bg: rgba(56, 189, 248, 0.12);
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
 
   /* Typography */
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.7);
 
   /* Radii */
+  --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-pill: 9999px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
 }
 
-/* Base Reset & Box Sizing */
+/* Base Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body.dark-theme {
-  background-color: var(--bg-deep);
-  background-image: 
-    radial-gradient(circle at 15% 10%, rgba(252, 82, 0, 0.05) 0%, transparent 45%),
-    radial-gradient(circle at 85% 60%, rgba(0, 240, 255, 0.04) 0%, transparent 45%);
-  color: var(--fg-primary);
-  font-family: var(--font-body);
-  line-height: 1.55;
-  min-height: 100vh;
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* Custom Scrollbars */
+/* Custom Clean Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep);
+  background: var(--bg-app);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-surface-elevated);
-  border-radius: var(--radius-pill);
+  background: var(--border-default);
+  border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--fg-muted);
+  background: var(--text-muted);
 }
 
-/* Screen reader only utility */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -101,145 +97,121 @@ body.dark-theme {
 }
 
 /* ==========================================================================
-   App Header & Navigation
+   Navigation Header
    ========================================================================== */
-.app-header {
+.navbar {
   position: sticky;
   top: 0;
   z-index: 100;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  height: 56px;
+}
+
+.navbar-container {
+  max-width: 1380px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 2rem;
-  background: rgba(16, 19, 26, 0.85);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
 }
 
-.brand-link {
+.navbar-brand {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   text-decoration: none;
-  color: inherit;
 }
 
-.brand-logo-img {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--accent-orange-glow);
-  box-shadow: 0 0 12px var(--accent-orange-glow);
-  object-fit: cover;
-}
-
-.brand-text {
+.brand-mark {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-title {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: 0.05em;
-  background: linear-gradient(135deg, #ffffff 40%, var(--accent-orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.brand-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
 }
 
-.brand-tag {
+.brand-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.brand-edition {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--accent-cyan);
-  letter-spacing: 0.15em;
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--strava-orange);
+  letter-spacing: 0.08em;
 }
 
-/* Navigation Tabs */
-.nav-tabs {
+/* Clean Tab Navigation */
+.nav-links {
   display: flex;
   align-items: center;
-  background: var(--bg-surface);
-  padding: 0.3rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--glass-border);
+  height: 100%;
   gap: 0.25rem;
 }
 
-.nav-tab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 1rem;
+.nav-item {
+  height: 100%;
+  padding: 0 0.85rem;
   background: transparent;
   border: none;
-  color: var(--fg-secondary);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.85rem;
-  border-radius: var(--radius-pill);
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
-.nav-icon {
-  width: 15px;
-  height: 15px;
-  stroke: currentColor;
+.nav-item:hover {
+  color: var(--text-main);
 }
 
-.nav-tab:hover {
-  color: var(--fg-primary);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.nav-tab.active {
+.nav-item.active {
   color: #ffffff;
-  background: linear-gradient(135deg, var(--accent-orange) 0%, #e04400 100%);
-  box-shadow: 0 2px 10px var(--accent-orange-glow);
+  border-bottom-color: var(--strava-orange);
+  font-weight: 600;
 }
 
-.header-right {
+.navbar-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-.status-indicator-pill {
+.athlete-badge {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: var(--radius-pill);
+  gap: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-success);
   border-radius: 50%;
-  background: var(--accent-green);
 }
 
-.status-dot.pulse {
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: pulse-green 2s infinite;
-}
-
-@keyframes pulse-green {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-}
-
-.status-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--accent-green);
-  letter-spacing: 0.05em;
+.athlete-name-label {
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 /* Buttons */
@@ -247,44 +219,51 @@ body.dark-theme {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.25rem;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 600;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all var(--transition-normal);
+  transition: all 0.15s ease;
   text-decoration: none;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-orange) 0%, #d84500 100%);
+  background-color: var(--strava-orange);
   color: #ffffff;
-  box-shadow: 0 4px 14px var(--accent-orange-glow);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #ff6b26 0%, var(--accent-orange) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px var(--accent-orange-glow);
+  background-color: var(--strava-orange-hover);
+}
+
+.btn-secondary {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-main);
+  border-color: var(--border-default);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--text-muted);
 }
 
 .btn-outline {
   background: transparent;
-  border-color: var(--glass-border);
-  color: var(--fg-primary);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
 }
 
 .btn-outline:hover {
   background: var(--bg-surface-elevated);
-  border-color: var(--glass-border-hover);
+  color: var(--text-main);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--accent-cyan);
+  color: var(--strava-orange);
   padding: 0.25rem 0.5rem;
 }
 
@@ -294,542 +273,471 @@ body.dark-theme {
 }
 
 .btn-sm {
-  padding: 0.35rem 0.85rem;
+  padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
 }
 
+.btn-xs {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+}
+
 /* ==========================================================================
-   Main Content Layout
+   Page Layout & Cards
    ========================================================================== */
-.main-content {
+.page-container {
   max-width: 1380px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 1.75rem 1.5rem 4rem;
 }
 
 .tab-pane {
   display: none;
-  animation: fadeIn 0.3s ease;
 }
 
 .tab-pane.active {
   display: block;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
 }
 
-/* ==========================================================================
-   Hero Banner Card
-   ========================================================================== */
-.hero-banner-card {
-  position: relative;
+.card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(22, 26, 36, 0.85) 0%, rgba(16, 20, 28, 0.95) 100%);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 2rem 2.5rem;
-  margin-bottom: 2rem;
-  overflow: hidden;
-  box-shadow: var(--glass-glow);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.hero-banner-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--accent-orange), var(--accent-cyan));
-}
-
-.hero-banner-content {
-  max-width: 65%;
-  z-index: 2;
-}
-
-.hero-badge {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--accent-cyan);
-  background: rgba(0, 240, 255, 0.1);
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(0, 240, 255, 0.25);
-  margin-bottom: 0.75rem;
-}
-
-.hero-title {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.4rem;
-}
-
-.hero-goal-pill {
-  font-size: 0.95rem;
-  color: var(--fg-secondary);
-  margin-bottom: 1.5rem;
-}
-
-.biometrics-strip {
-  display: flex;
-  align-items: center;
-  background: rgba(10, 12, 16, 0.65);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 0.85rem 1.25rem;
-  gap: 1.25rem;
-}
-
-.bio-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.bio-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--fg-muted);
-  letter-spacing: 0.05em;
-}
-
-.bio-val {
-  font-family: var(--font-mono);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--fg-primary);
-}
-
-.bio-val small {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--fg-secondary);
-}
-
-.bio-divider {
-  width: 1px;
-  height: 28px;
-  background: var(--glass-border);
-}
-
-.hero-banner-art {
-  max-width: 320px;
-  z-index: 1;
-}
-
-.hero-art-img {
-  width: 100%;
-  height: auto;
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  border: 1px solid var(--glass-border);
-}
-
-/* ==========================================================================
-   KPI Cards Grid
-   ========================================================================== */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-
-.kpi-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
-  transition: all var(--transition-normal);
-}
-
-.kpi-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-glow);
-}
-
-.kpi-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-
-.kpi-title {
-  font-size: 0.85rem;
+.card-title {
+  font-size: 1.05rem;
   font-weight: 600;
-  color: var(--fg-secondary);
+  color: #ffffff;
+  letter-spacing: -0.01em;
 }
 
-.kpi-icon-badge {
-  font-size: 1.1rem;
-}
-
-.kpi-value {
-  font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.35rem;
-}
-
-.kpi-unit {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--fg-secondary);
-}
-
-.kpi-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* Colors & Helpers */
-.text-accent { color: var(--accent-cyan); }
-.text-success { color: var(--accent-green); }
-.text-muted { color: var(--fg-muted); }
-.text-orange { color: var(--accent-orange); }
-
-/* ==========================================================================
-   Panels & Split Dashboard
-   ========================================================================== */
-.dashboard-split-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 1.5rem;
-}
-
-.panel-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 1.75rem;
-  box-shadow: var(--glass-glow);
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.panel-title {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.panel-subtitle {
+.card-subtitle {
   font-size: 0.8rem;
-  color: var(--fg-secondary);
+  color: var(--text-muted);
+  margin-top: 0.15rem;
 }
 
-/* Activity Feed Items */
-.activity-feed-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.activity-card-item {
+/* ==========================================================================
+   Athlete Profile Header
+   ========================================================================== */
+.profile-header-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
-  cursor: pointer;
-  transition: all var(--transition-normal);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.activity-card-item:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--accent-orange-glow);
-  transform: translateX(4px);
-}
-
-.act-left {
+.profile-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
-.act-icon-box {
-  width: 44px;
-  height: 44px;
+.avatar-box {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm);
-  font-size: 1.25rem;
-  background: var(--bg-deep);
-  border: 1px solid var(--glass-border);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--strava-orange);
 }
 
-.act-icon-box.strength { border-color: rgba(252, 82, 0, 0.4); }
-.act-icon-box.endurance { border-color: rgba(0, 240, 255, 0.4); }
-
-.act-details {
+.profile-titles {
   display: flex;
   flex-direction: column;
 }
 
-.act-title-row {
+.profile-name-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.act-title {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--fg-primary);
-}
-
-.act-badge-pr {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 700;
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-pill);
-}
-
-.act-meta {
-  font-size: 0.78rem;
-  color: var(--fg-secondary);
-  display: flex;
   gap: 0.75rem;
 }
 
-.act-right {
+.profile-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.tag-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.profile-goal {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.profile-metrics {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pm-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
 }
 
-.act-metric-val {
+.pm-label {
   font-family: var(--font-mono);
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
-.act-duration {
+.pm-value {
   font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.pm-value .unit {
   font-size: 0.75rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
-/* Training Balance */
-.balance-container {
+/* ==========================================================================
+   Metrics Grid (4 KPI Cards)
+   ========================================================================== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
-.balance-labels {
+.stat-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.stat-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-xs);
+}
+
+.stat-tag.strength { background-color: var(--strava-orange-subtle); color: var(--strava-orange); }
+.stat-tag.endurance { background-color: var(--color-highlight-bg); color: var(--color-highlight); }
+.stat-tag.neutral { background-color: var(--bg-subtle); color: var(--text-secondary); }
+.stat-tag.milestone { background-color: var(--color-success-bg); color: var(--color-success); }
+
+.stat-number {
+  font-family: var(--font-mono);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.stat-unit {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.stat-footer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.text-positive { color: var(--color-success); font-weight: 500; }
+.text-highlight { color: var(--color-highlight); font-weight: 500; }
+.text-subtle { color: var(--text-muted); }
+
+/* ==========================================================================
+   Dashboard Columns (Split View)
+   ========================================================================== */
+.dashboard-columns {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  gap: 1.5rem;
+}
+
+/* Clean Activities Table */
+.activity-table-wrapper {
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activity-table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.activity-table td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+}
+
+.activity-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.activity-row:hover {
+  background-color: var(--bg-surface-elevated);
+}
+
+.sport-icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-subtle);
+  font-size: 0.85rem;
+}
+
+.sport-icon-chip.weighttraining { color: var(--strava-orange); }
+.sport-icon-chip.run { color: var(--color-highlight); }
+
+.act-name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.act-pr-pill {
+  margin-left: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-full);
+}
+
+.act-stat-mono {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* Training Distribution & Muscle Load */
+.split-meter-box {
+  margin-bottom: 1.5rem;
+}
+
+.split-meter-labels {
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
   margin-bottom: 0.4rem;
 }
 
-.balance-label.strength { color: var(--accent-orange); }
-.balance-label.endurance { color: var(--accent-cyan); }
-
-.balance-bar {
+.split-meter-bar {
   display: flex;
-  height: 10px;
-  background: var(--bg-deep);
-  border-radius: var(--radius-pill);
+  height: 8px;
+  background-color: var(--bg-app);
+  border-radius: var(--radius-full);
   overflow: hidden;
-  border: 1px solid var(--glass-border);
 }
 
-.balance-fill-strength { background: var(--accent-orange); }
-.balance-fill-endurance { background: var(--accent-cyan); }
+.split-segment.strength { background-color: var(--strava-orange); }
+.split-segment.endurance { background-color: var(--color-highlight); }
 
-/* Muscle Volume Progress Tracks */
-.muscle-bars-list {
+.muscle-rows-container {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
   margin-bottom: 1.5rem;
 }
 
-.muscle-bar-info {
+.mr-info {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.82rem;
+  margin-bottom: 0.3rem;
 }
 
-.muscle-name { font-weight: 600; }
-.muscle-vol { font-family: var(--font-mono); color: var(--fg-secondary); }
+.mr-name { font-weight: 500; color: var(--text-main); }
+.mr-val { font-family: var(--font-mono); color: var(--text-secondary); }
+.mr-sets { color: var(--text-muted); }
 
-.progress-track {
+.meter-track {
   width: 100%;
-  height: 6px;
-  background: var(--bg-deep);
-  border-radius: var(--radius-pill);
+  height: 5px;
+  background-color: var(--bg-app);
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
-.progress-fill {
+.meter-fill {
   height: 100%;
-  border-radius: var(--radius-pill);
-  transition: width 0.6s ease;
+  background-color: var(--text-secondary);
+  border-radius: var(--radius-full);
 }
 
-/* Coach Takeaway Box */
-.coach-takeaway-card {
-  background: rgba(168, 85, 247, 0.08);
-  border: 1px solid rgba(168, 85, 247, 0.25);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
+.coach-insight-callout {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--strava-orange);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
 }
 
-.takeaway-badge {
+.callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--accent-purple);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--strava-orange);
   letter-spacing: 0.05em;
   margin-bottom: 0.4rem;
 }
 
-.takeaway-text {
-  font-size: 0.85rem;
-  color: #e2e8f0;
-  font-style: italic;
+.callout-body {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
   line-height: 1.45;
 }
 
 /* ==========================================================================
-   AI Coach Console Tab
+   AI Advisor Chat Interface
    ========================================================================== */
-.chat-container {
+.chat-layout {
   display: flex;
   flex-direction: column;
-  height: 75vh;
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
+  height: 72vh;
+  padding: 0;
   overflow: hidden;
 }
 
-.chat-header {
+.chat-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
 }
 
-.coach-avatar-group {
+.advisor-info {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
-.coach-avatar {
-  position: relative;
-  width: 40px;
-  height: 40px;
-}
-
-.coach-avatar img {
-  width: 100%;
-  height: 100%;
+.advisor-status-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1px solid var(--accent-purple);
+  background-color: var(--color-success);
 }
 
-.online-indicator {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background: var(--accent-green);
-  border: 2px solid var(--bg-surface);
-  border-radius: 50%;
+.advisor-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
-.coach-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.coach-status {
+.advisor-subtitle {
   font-size: 0.75rem;
-  color: var(--fg-secondary);
+  color: var(--text-muted);
 }
 
-.quick-prompts-bar {
+.chat-chips-bar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: rgba(10, 12, 16, 0.4);
-  border-bottom: 1px solid var(--glass-border);
+  gap: 0.45rem;
+  padding: 0.65rem 1.5rem;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
   overflow-x: auto;
 }
 
-.prompts-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--fg-muted);
+.chips-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
-.prompt-chip {
-  padding: 0.35rem 0.75rem;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
+.chip-btn {
+  padding: 0.3rem 0.65rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
   font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill);
   cursor: pointer;
   white-space: nowrap;
-  transition: all var(--transition-fast);
+  transition: all 0.15s ease;
 }
 
-.prompt-chip:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--accent-cyan);
-  transform: translateY(-1px);
+.chip-btn:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text-main);
+  border-color: var(--text-muted);
 }
 
-.chat-messages {
+.chat-thread {
   flex: 1;
   padding: 1.5rem;
   overflow-y: auto;
@@ -838,199 +746,181 @@ body.dark-theme {
   gap: 1.25rem;
 }
 
-.message-bubble {
-  max-width: 78%;
+.chat-entry {
+  max-width: 80%;
   display: flex;
   flex-direction: column;
-  animation: fadeIn 0.25s ease;
 }
 
-.message-bubble.user {
+.chat-entry.user {
   align-self: flex-end;
 }
 
-.message-bubble.coach {
+.chat-entry.coach {
   align-self: flex-start;
 }
 
-.bubble-header {
+.chat-meta {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
 }
 
-.message-bubble.user .bubble-header {
+.chat-entry.user .chat-meta {
   justify-content: flex-end;
 }
 
-.bubble-author {
-  font-weight: 700;
-  font-size: 0.78rem;
-  color: var(--fg-secondary);
+.sender-name {
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
-.bubble-time {
-  font-size: 0.7rem;
-  color: var(--fg-muted);
+.message-time {
+  color: var(--text-muted);
 }
 
-.bubble-content {
-  padding: 1rem 1.25rem;
+.message-body {
+  padding: 0.9rem 1.15rem;
   border-radius: var(--radius-md);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.55;
 }
 
-.message-bubble.user .bubble-content {
-  background: linear-gradient(135deg, var(--accent-orange) 0%, #d84500 100%);
+.chat-entry.user .message-body {
+  background-color: var(--strava-orange);
   color: #ffffff;
-  border-bottom-right-radius: 2px;
 }
 
-.message-bubble.coach .bubble-content {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
-  border-bottom-left-radius: 2px;
+.chat-entry.coach .message-body {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-main);
 }
 
-.message-bubble.coach .bubble-content p + p {
-  margin-top: 0.75rem;
+.chat-entry.coach .message-body p + p {
+  margin-top: 0.65rem;
 }
 
-.message-bubble.coach .bubble-content ul {
-  margin-left: 1.25rem;
-  margin-top: 0.5rem;
+.chat-entry.coach .message-body ul {
+  margin-left: 1.2rem;
+  margin-top: 0.4rem;
 }
 
-.chat-input-bar {
+.chat-form {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: var(--bg-surface);
-  border-top: 1px solid var(--glass-border);
+  background-color: var(--bg-surface-elevated);
+  border-top: 1px solid var(--border-subtle);
 }
 
-.chat-input {
+.chat-text-input {
   flex: 1;
-  background: var(--bg-deep);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-pill);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color var(--transition-fast);
 }
 
-.chat-input:focus {
-  border-color: var(--accent-orange);
+.chat-text-input:focus {
+  border-color: var(--strava-orange);
 }
 
 /* ==========================================================================
-   Filter Pills & Grid Views (Activities & PRs)
-   ========================================================================== */
-.filter-pills {
+   Filter Groups & Grids (Workouts & PRs)
+   ========================================================================= */
+.filter-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  background-color: var(--bg-surface-elevated);
+  padding: 0.2rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
 }
 
-.filter-pill {
-  padding: 0.4rem 0.9rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-secondary);
+.filter-tab {
+  padding: 0.3rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
   font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill);
+  font-weight: 500;
+  border-radius: var(--radius-xs);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.15s ease;
 }
 
-.filter-pill:hover {
-  color: var(--fg-primary);
-  border-color: var(--glass-border-hover);
-}
-
-.filter-pill.active {
-  background: var(--accent-orange);
+.filter-tab.active {
+  background-color: var(--bg-subtle);
   color: #ffffff;
-  border-color: var(--accent-orange);
+  font-weight: 600;
 }
 
 .activities-grid, .prs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.25rem;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 
-/* Activity Card */
 .activity-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
+  padding: 1.25rem;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  transition: all 0.15s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .activity-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-glow);
+  border-color: var(--border-default);
+  background-color: var(--bg-surface-hover);
 }
 
 .card-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .card-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-xs);
 }
 
-.card-badge.weighttraining {
-  background: rgba(252, 82, 0, 0.15);
-  color: var(--accent-orange);
-  border: 1px solid rgba(252, 82, 0, 0.35);
-}
-
-.card-badge.run {
-  background: rgba(0, 240, 255, 0.15);
-  color: var(--accent-cyan);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-}
+.card-badge.weighttraining { background-color: var(--strava-orange-subtle); color: var(--strava-orange); }
+.card-badge.run { background-color: var(--color-highlight-bg); color: var(--color-highlight); }
 
 .card-date {
   font-size: 0.75rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
 }
 
 .card-title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
 }
 
 .card-summary {
-  font-size: 0.82rem;
-  color: var(--fg-secondary);
-  margin-bottom: 1.25rem;
-  line-height: 1.45;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
 .card-metrics-row {
@@ -1038,7 +928,7 @@ body.dark-theme {
   align-items: center;
   justify-content: space-between;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .card-metric {
@@ -1049,28 +939,22 @@ body.dark-theme {
 .metric-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
 }
 
 .metric-val {
   font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
-/* PR Board Card */
+/* Personal Best Cards */
 .pr-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
-  transition: all var(--transition-normal);
-}
-
-.pr-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+  padding: 1.25rem;
 }
 
 .pr-card-header {
@@ -1081,217 +965,216 @@ body.dark-theme {
 }
 
 .pr-exercise-name {
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .pr-category-badge {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background-color: var(--bg-subtle);
   padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-  background: var(--bg-deep);
-  color: var(--fg-secondary);
+  border-radius: var(--radius-xs);
 }
 
 .pr-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
 .pr-stat-box {
-  background: var(--bg-deep);
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 0.65rem;
 }
 
 .pr-stat-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
 }
 
 .pr-stat-value {
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--accent-green);
+  color: var(--color-success);
 }
 
 .pr-card-footer {
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
-  color: var(--fg-muted);
-  border-top: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
   padding-top: 0.5rem;
 }
 
 /* ==========================================================================
-   Chart Preset Studio
+   Analytics Chart Studio
    ========================================================================== */
-.chart-controls {
+.select-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-.form-select {
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
-  font-family: var(--font-body);
+.clean-select {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-main);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
-  padding: 0.45rem 1rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-sm);
   outline: none;
 }
 
-.chart-display-container {
+.chart-canvas-box {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  margin-top: 1.5rem;
+  gap: 1rem;
+  margin-top: 1.25rem;
 }
 
-.chart-image-wrapper {
-  background: #111318;
-  border: 1px solid var(--glass-border);
+.chart-frame {
+  background-color: #111318;
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: 420px;
 }
 
-.chart-rendered-img {
+.chart-img {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius-sm);
 }
 
-.chart-details-bar {
+.chart-caption-bar {
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 1rem 1.5rem;
-  background: var(--bg-surface);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--glass-border);
+  padding: 0.85rem 1.25rem;
+  background-color: var(--bg-surface-elevated);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
 }
 
-.chart-info-item {
+.caption-item {
   display: flex;
   flex-direction: column;
 }
 
-.chart-info-label {
+.cap-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
 }
 
-.chart-info-val {
+.cap-val {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 /* ==========================================================================
-   Workout Simulator & Parser Lab
+   Workout Simulator Lab
    ========================================================================== */
-.simulator-layout {
+.simulator-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
 }
 
-.simulator-presets-bar {
+.template-chips {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.presets-label {
-  font-size: 0.8rem;
-  color: var(--fg-muted);
+.tc-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
-.simulator-textarea {
+.sim-editor {
   width: 100%;
-  background: var(--bg-deep);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-default);
+  color: var(--text-main);
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  padding: 1rem;
-  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  border-radius: var(--radius-sm);
   resize: vertical;
   outline: none;
   margin-bottom: 1rem;
 }
 
-.simulator-textarea:focus {
-  border-color: var(--accent-orange);
+.sim-editor:focus {
+  border-color: var(--strava-orange);
 }
 
-.simulator-actions {
+.sim-button-row {
   display: flex;
   gap: 0.75rem;
 }
 
-.sim-empty-state {
+.empty-state {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 3rem 2rem;
-  color: var(--fg-muted);
-  gap: 1rem;
+  padding: 3rem 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 
-.sim-results-content.hidden {
+.sim-output-box.hidden {
   display: none;
 }
 
-.sim-kpi-row {
+.sim-summary-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
-.sim-kpi {
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
+.summary-tile {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
 }
 
-.sim-kpi-label {
+.st-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: var(--fg-muted);
+  color: var(--text-muted);
 }
 
-.sim-kpi-val {
+.st-val {
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--accent-orange);
+  color: var(--strava-orange);
 }
 
-.sim-exercises-list {
+.sim-parsed-items {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -1301,8 +1184,8 @@ body.dark-theme {
 }
 
 .sim-ex-item {
-  background: var(--bg-deep);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 0.75rem;
 }
@@ -1310,8 +1193,8 @@ body.dark-theme {
 .sim-ex-header {
   display: flex;
   justify-content: space-between;
-  font-weight: 700;
   font-size: 0.85rem;
+  font-weight: 600;
   margin-bottom: 0.35rem;
 }
 
@@ -1324,144 +1207,149 @@ body.dark-theme {
 .sim-set-pill {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
   padding: 0.15rem 0.4rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
 }
 
-.sim-briefing-box {
-  background: rgba(0, 240, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.25);
-  border-radius: var(--radius-md);
+.sim-briefing-panel {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
   padding: 1rem;
 }
 
-.sim-briefing-badge {
+.sb-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
+  font-weight: 600;
+  color: var(--strava-orange);
 }
 
-.sim-briefing-text {
+.sb-text {
   font-size: 0.85rem;
   line-height: 1.5;
-  margin-top: 0.4rem;
+  margin-top: 0.35rem;
+  color: var(--text-secondary);
 }
 
 /* ==========================================================================
-   Settings & Diagnostics
+   Settings & Integrations
    ========================================================================== */
-.settings-grid {
+.settings-layout {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.15fr 0.85fr;
   gap: 1.5rem;
 }
 
-.settings-form {
+.clean-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-.form-group {
+.input-field {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
-.form-group label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--fg-secondary);
+.input-field label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
-.form-input {
-  background: var(--bg-deep);
-  border: 1px solid var(--glass-border);
-  color: var(--fg-primary);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  padding: 0.65rem 1rem;
+.text-input {
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-default);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  padding: 0.55rem 0.85rem;
   border-radius: var(--radius-sm);
   outline: none;
 }
 
-.form-input:focus {
-  border-color: var(--accent-orange);
+.text-input:focus {
+  border-color: var(--strava-orange);
 }
 
-.form-hint {
-  font-size: 0.75rem;
-  color: var(--fg-muted);
+.field-help {
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
-.form-row {
+.input-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-.service-status-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.form-submit-row {
+  margin-top: 0.5rem;
 }
 
-.service-item {
+.integrations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.int-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-surface);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.25rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
 }
 
-.service-info {
+.int-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
-.service-icon {
-  font-size: 1.35rem;
-}
-
-.service-name {
-  display: block;
+.int-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.85rem;
+  background-color: var(--bg-subtle);
+  color: var(--text-main);
 }
 
-.service-sub {
-  font-size: 0.75rem;
-  color: var(--fg-muted);
+.int-icon.strava { background-color: var(--strava-orange-subtle); color: var(--strava-orange); }
+.int-name { font-weight: 600; font-size: 0.88rem; display: block; color: #ffffff; }
+.int-desc { font-size: 0.75rem; color: var(--text-muted); }
+
+.pill-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
 }
 
-.service-badge {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
-}
-
-.service-badge.connected {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+.pill-success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
 }
 
 /* ==========================================================================
    Activity Inspector Modal
    ========================================================================== */
-.modal-overlay {
+.modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -1469,181 +1357,158 @@ body.dark-theme {
   padding: 1.5rem;
 }
 
-.modal-overlay.hidden {
+.modal-backdrop.hidden {
   display: none;
 }
 
-.modal-card {
-  background: var(--bg-base);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
+.modal-dialog {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
   width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
+  max-width: 760px;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
-  animation: modalScale 0.25s ease;
+  box-shadow: var(--shadow-lg);
 }
 
-@keyframes modalScale {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.modal-header {
+.modal-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--glass-border);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.modal-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+.modal-pretitle {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-date-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.modal-headline {
+  font-size: 1.25rem;
   font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-  background: rgba(252, 82, 0, 0.15);
-  color: var(--accent-orange);
-  margin-bottom: 0.35rem;
-  display: inline-block;
+  color: #ffffff;
 }
 
-.modal-title {
-  font-family: var(--font-heading);
-  font-size: 1.35rem;
-  font-weight: 800;
-}
-
-.modal-date {
-  font-size: 0.8rem;
-  color: var(--fg-muted);
-}
-
-.modal-close-btn {
+.modal-close {
   background: transparent;
   border: none;
-  color: var(--fg-secondary);
-  font-size: 1.75rem;
+  color: var(--text-muted);
+  font-size: 1.5rem;
   cursor: pointer;
   line-height: 1;
 }
 
-.modal-close-btn:hover {
+.modal-close:hover {
   color: #ffffff;
 }
 
-.modal-body {
+.modal-content-scroll {
   padding: 1.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* Modal Internal Sections */
 .modal-section-title {
-  font-size: 0.85rem;
   font-family: var(--font-mono);
-  color: var(--fg-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
   letter-spacing: 0.05em;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .sets-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
 }
 
 .sets-table th {
   text-align: left;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--fg-muted);
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--glass-border);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .sets-table td {
-  padding: 0.6rem 0.5rem;
-  border-bottom: 1px solid var(--glass-border);
+  padding: 0.55rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
+  font-size: 0.82rem;
 }
 
 .modal-briefing-card {
-  background: rgba(168, 85, 247, 0.08);
-  border: 1px solid rgba(168, 85, 247, 0.25);
-  border-radius: var(--radius-md);
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
   padding: 1.25rem;
 }
 
 .modal-briefing-badge {
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--accent-purple);
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--strava-orange);
+  margin-bottom: 0.45rem;
 }
 
 .modal-briefing-text {
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: #e2e8f0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
 
-/* Toast Container */
+/* Toast Notifications */
 .toast-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .toast {
-  background: var(--bg-surface-elevated);
+  background-color: var(--bg-surface-elevated);
   color: #ffffff;
-  padding: 0.75rem 1.25rem;
+  padding: 0.65rem 1rem;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  font-size: 0.85rem;
-  font-weight: 600;
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-md);
+  font-size: 0.82rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  animation: toastIn 0.3s ease;
+  gap: 0.5rem;
 }
 
-.toast.success {
-  border-color: rgba(16, 185, 129, 0.5);
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+.toast.success { border-color: var(--color-success); }
 
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
-  .hero-banner-card { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-  .hero-banner-content { max-width: 100%; }
-  .hero-banner-art { max-width: 100%; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .dashboard-split-grid { grid-template-columns: 1fr; }
-  .simulator-layout { grid-template-columns: 1fr; }
-  .settings-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-columns { grid-template-columns: 1fr; }
+  .simulator-grid { grid-template-columns: 1fr; }
+  .settings-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
-  .app-header { flex-direction: column; gap: 0.85rem; padding: 1rem; }
-  .nav-tabs { overflow-x: auto; width: 100%; }
-  .kpi-grid { grid-template-columns: 1fr; }
-  .biometrics-strip { flex-wrap: wrap; gap: 0.75rem; }
-  .bio-divider { display: none; }
+  .navbar-container { padding: 0 1rem; }
+  .nav-links { display: none; }
+  .profile-header-card { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  .profile-metrics { flex-wrap: wrap; gap: 1rem; }
+  .metrics-grid { grid-template-columns: 1fr; }
 }

@@ -30,15 +30,15 @@ def test_frontend_static_html():
     status, headers, body = _request("GET", "/")
     assert status == 200
     assert "text/html" in headers.get("Content-Type", "")
-    assert b"LIFTMATE" in body
-    assert b"HYBRID TELEMETRY" in body
+    assert b"LiftMate" in body
+    assert b"TRAINING OS" in body
 
 
 def test_frontend_static_css():
     status, headers, body = _request("GET", "/style.css")
     assert status == 200
     assert "text/css" in headers.get("Content-Type", "")
-    assert b"--accent-orange" in body
+    assert b"--strava-orange" in body
 
 
 def test_frontend_static_js():

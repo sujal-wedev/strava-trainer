@@ -125,6 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('kpi-active-prs').innerHTML = `${state.prs.length} <span class="kpi-unit">bests</span>`;
     }
 
+    if (document.getElementById('top-athlete-name')) {
+      document.getElementById('top-athlete-name').textContent = state.profile.athlete_name || 'Sujal Nag';
+    }
+
     // Dashboard Recent Activity Feed (top 4)
     const feedContainer = document.getElementById('dashboard-activity-feed');
     if (!feedContainer) return;
@@ -132,38 +136,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.activities.slice(0, 4).forEach((act) => {
       const isStrength = act.sport_type === 'WeightTraining';
-      const item = document.createElement('div');
-      item.className = 'activity-card-item';
-      item.onclick = () => openActivityModal(act);
+      const tr = document.createElement('tr');
+      tr.className = 'activity-row';
+      tr.onclick = () => openActivityModal(act);
 
       const metricDisplay = isStrength
-        ? `${(act.volume_kg || 0).toLocaleString()} kg vol`
+        ? `${(act.volume_kg || 0).toLocaleString()} kg`
         : `${act.distance_km || 0} km`;
 
-      item.innerHTML = `
-        <div class="act-left">
-          <div class="act-icon-box ${isStrength ? 'strength' : 'endurance'}">
+      tr.innerHTML = `
+        <td>
+          <span class="sport-icon-chip ${act.sport_type.toLowerCase()}">
             ${isStrength ? '🏋️' : '🏃'}
-          </div>
-          <div class="act-details">
-            <div class="act-title-row">
-              <span class="act-title">${act.title}</span>
-              ${act.prs_count > 0 ? `<span class="act-badge-pr">${act.prs_count} PR</span>` : ''}
-            </div>
-            <div class="act-meta">
-              <span>${formatDate(act.start_date)}</span>
-              <span>•</span>
-              <span>${formatDuration(act.duration_s)}</span>
-              ${act.avg_hr ? `<span>• Avg HR: ${act.avg_hr} bpm</span>` : ''}
-            </div>
-          </div>
-        </div>
-        <div class="act-right">
-          <span class="act-metric-val">${metricDisplay}</span>
-          <span class="act-duration">Click for telemetry &rarr;</span>
-        </div>
+          </span>
+        </td>
+        <td>
+          <span class="act-name">${act.title}</span>
+          ${act.prs_count > 0 ? `<span class="act-pr-pill">${act.prs_count} PR</span>` : ''}
+        </td>
+        <td class="text-subtle">${formatDate(act.start_date)}</td>
+        <td class="act-stat-mono">${metricDisplay}</td>
+        <td class="text-subtle">${formatDuration(act.duration_s)}</td>
+        <td style="text-align:right;"><span class="btn-ghost btn-xs">Inspect &rarr;</span></td>
       `;
-      feedContainer.appendChild(item);
+      feedContainer.appendChild(tr);
     });
   }
 
