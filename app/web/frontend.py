@@ -40,6 +40,8 @@ from app.web.types import WebResponse
 
 # Frontend base directory
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
+if not FRONTEND_DIR.exists():
+    FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "public"
 
 # Default demonstration dataset for initial onboarding and local dev without live database
 DEFAULT_PROFILE = {
@@ -316,7 +318,11 @@ def _read_static_file(rel_path: str) -> tuple[bytes, str] | None:
         target = FRONTEND_DIR / clean_path
 
     if not target.exists() or not target.is_file():
-        return None
+        alt = Path(__file__).resolve().parent.parent.parent / "public" / (clean_path if clean_path else "index.html")
+        if alt.exists() and alt.is_file():
+            target = alt
+        else:
+            return None
 
     content_type, _ = mimetypes.guess_type(str(target))
     if not content_type:
