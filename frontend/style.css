@@ -1497,6 +1497,39 @@ body {
 
 .toast.success { border-color: var(--color-success); }
 
+/* Rep Range Breakdown Pills */
+.rep-range-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pill-xs {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+}
+
+.btn-forward-tg {
+  color: var(--strava-orange);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--strava-orange-subtle);
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.btn-forward-tg:hover {
+  background-color: var(--strava-orange-subtle);
+  color: #ffffff;
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .metrics-grid { grid-template-columns: repeat(2, 1fr); }

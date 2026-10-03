@@ -52,6 +52,9 @@ def _route_get(path: str, environ: dict) -> WebResponse:
             token_store=_token_store,
         )
 
+    if path == "/api/oauth/strava/connect":
+        return frontend.handle_strava_connect(settings)
+
     if path == "/api/cron/purge_cache":
         if not _check_cron_auth(read_headers(environ)):
             return WebResponse.json(401, {"error": "unauthorized"})
@@ -122,6 +125,12 @@ def _route_post(path: str, environ: dict) -> WebResponse:
 
     if path == "/api/simulate-workout":
         return frontend.handle_simulate_workout(read_body(environ))
+
+    if path == "/api/telegram/dispatch":
+        return frontend.handle_telegram_dispatch(read_body(environ), settings)
+
+    if path == "/api/trigger/weekly_digest":
+        return frontend.handle_trigger_weekly_digest(_db, settings)
     if path == "/api/webhook/strava":
         return strava_webhook.handle_post(
             read_body(environ),

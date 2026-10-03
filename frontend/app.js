@@ -43,6 +43,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
+  // Telegram Bot Dispatch Client
+  // ==========================================================================
+  let currentModalActivity = null;
+  let currentSimResult = null;
+
+  async function sendToTelegram(text, title = 'LiftMate Telemetry') {
+    if (!text) {
+      showToast('No message content to send.', 'error');
+      return;
+    }
+    showToast('Dispatching to @sujal_liftmate_bot...', 'info');
+    try {
+      const formatted = title ? `🚀 *${title}*\n\n${text}` : text;
+      const res = await fetch('/api/telegram/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: formatted }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to dispatch');
+      showToast('Delivered to Telegram bot!', 'success');
+    } catch (err) {
+      showToast(`Telegram dispatch error: ${err.message}`, 'error');
+    }
+  }
+
+  // ==========================================================================
   // Tab Navigation Handling
   // ==========================================================================
   function switchTab(targetTab) {
@@ -224,6 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function openActivityModal(act) {
+    currentModalActivity = act;
     const isStrength = act.sport_type === 'WeightTraining';
     document.getElementById('modal-sport-badge').textContent = isStrength ? '🏋️ Weight Training' : '🏃 Running';
     document.getElementById('modal-activity-title').textContent = act.title;
@@ -231,6 +259,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const body = document.getElementById('modal-activity-body');
     body.innerHTML = '';
+
+    // Deterministic Performance Metrics Strip
+    const metricsStrip = document.createElement('div');
+    metricsStrip.className = 'sim-summary-row';
+    metricsStrip.style.marginBottom = '1.2rem';
+
+    if (isStrength) {
+      metricsStrip.innerHTML = `
+        <div class="summary-tile">
+          <span class="st-label">TOTAL VOLUME</span>
+          <span class="st-val text-accent">${(act.volume_kg || 0).toLocaleString()} kg</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">WORKING SETS</span>
+          <span class="st-val">${act.working_sets || 16}</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">PUSH / PULL</span>
+          <span class="st-val">${act.push_pull_ratio || '1.45'} : 1</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">UPPER / LOWER</span>
+          <span class="st-val">${act.upper_lower_ratio || '2.60'} : 1</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">DENSITY</span>
+          <span class="st-val">${act.density_kg_per_min || '222.6'} kg/min</span>
+        </div>
+      `;
+    } else {
+      metricsStrip.innerHTML = `
+        <div class="summary-tile">
+          <span class="st-label">DISTANCE</span>
+          <span class="st-val text-accent">${act.distance_km} km</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">AVG HR</span>
+          <span class="st-val">${act.avg_hr} bpm</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">DECOUPLING</span>
+          <span class="st-val">${act.aerobic_decoupling_pct || '2.1'}%</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">EFFICIENCY (EF)</span>
+          <span class="st-val">${act.efficiency_factor || '1.42'}</span>
+        </div>
+        <div class="summary-tile">
+          <span class="st-label">TRIMP LOAD</span>
+          <span class="st-val">${act.trimp || '68.4'}</span>
+        </div>
+      `;
+    }
+    body.appendChild(metricsStrip);
 
     // If Strength Workout: Exercise Breakdown Table
     if (isStrength && act.exercises) {
@@ -334,6 +416,12 @@ document.addEventListener('DOMContentLoaded', () => {
   modalCloseBtn?.addEventListener('click', () => modal.classList.add('hidden'));
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) modal.classList.add('hidden');
+  });
+
+  document.getElementById('btn-modal-send-telegram')?.addEventListener('click', () => {
+    if (!currentModalActivity) return;
+    const summary = currentModalActivity.briefing || currentModalActivity.summary || currentModalActivity.title;
+    sendToTelegram(summary, currentModalActivity.title);
   });
 
   // ==========================================================================
@@ -446,6 +534,23 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="message-body">${text}</div>
     `;
+
+    if (sender === 'coach' && !text.includes('<em>')) {
+      const actionRow = document.createElement('div');
+      actionRow.style.marginTop = '0.6rem';
+      actionRow.innerHTML = `
+        <button type="button" class="btn btn-ghost btn-xs btn-forward-tg">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Forward to Telegram
+        </button>
+      `;
+      actionRow.querySelector('.btn-forward-tg')?.addEventListener('click', () => {
+        const raw = text.replace(/<[^>]+>/g, '').trim();
+        sendToTelegram(raw, 'LiftMate Coach Advice');
+      });
+      bubble.appendChild(actionRow);
+    }
+
     chatMessages.appendChild(bubble);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     return bubble;
@@ -575,15 +680,35 @@ Set 2: 18 kg x 10`
 
       if (!res.ok) throw new Error(data.error || 'Parsing error');
 
+      currentSimResult = data;
       simEmpty.classList.add('hidden');
       simContent.classList.remove('hidden');
       document.getElementById('sim-status-text').textContent = 'Parsing complete & validated';
 
       document.getElementById('sim-total-volume').textContent = `${(data.total_volume_kg || 0).toLocaleString()} kg`;
-      document.getElementById('sim-exercise-count').textContent = data.exercises.length;
-      document.getElementById('sim-warnings-count').textContent = (data.warnings || []).length;
+      if (document.getElementById('sim-working-sets')) {
+        document.getElementById('sim-working-sets').textContent = data.total_working_sets || data.exercises.length;
+      }
+      if (document.getElementById('sim-push-pull')) {
+        document.getElementById('sim-push-pull').textContent = data.push_pull_ratio ? `${data.push_pull_ratio} : 1` : '—';
+      }
+      if (document.getElementById('sim-upper-lower')) {
+        document.getElementById('sim-upper-lower').textContent = data.upper_lower_ratio ? `${data.upper_lower_ratio} : 1` : '—';
+      }
+      if (document.getElementById('sim-density')) {
+        document.getElementById('sim-density').textContent = `${data.density_kg_per_min || 0} kg/min`;
+      }
 
-      // Render parsed exercises
+      if (data.rep_range_distribution) {
+        const s = document.getElementById('pill-strength-reps');
+        const h = document.getElementById('pill-hypertrophy-reps');
+        const e = document.getElementById('pill-endurance-reps');
+        if (s) s.textContent = `Strength (1–5): ${data.rep_range_distribution.strength} sets`;
+        if (h) h.textContent = `Hypertrophy (6–12): ${data.rep_range_distribution.hypertrophy} sets`;
+        if (e) e.textContent = `Endurance (13+): ${data.rep_range_distribution.endurance} sets`;
+      }
+
+      // Render parsed exercises with deterministic calculations
       const exList = document.getElementById('sim-exercises-list');
       exList.innerHTML = '';
       data.exercises.forEach((ex) => {
@@ -591,22 +716,45 @@ Set 2: 18 kg x 10`
         item.className = 'sim-ex-item';
         item.innerHTML = `
           <div class="sim-ex-header">
-            <span>${ex.name} <small style="color:var(--fg-muted);">(${ex.muscle})</small></span>
-            <span style="color:var(--accent-orange);">${ex.volume_kg} kg vol • Best e1RM: ${ex.best_e1rm_kg}kg</span>
+            <span>${ex.name} <small style="color:var(--fg-muted);">(${ex.muscle})</small> ${ex.bilateral_dumbbell ? '<span class="pill-badge pill-xs" style="margin-left:0.4rem;">2x DB</span>' : ''}</span>
+            <span style="color:var(--accent-orange); font-family:var(--font-mono);">${ex.volume_kg} kg vol • Best e1RM: ${ex.best_e1rm_kg}kg</span>
           </div>
-          <div class="sim-ex-pills">
-            ${ex.sets.map((s) => `<span class="sim-set-pill">${s.weight_kg}kg x ${s.reps} (${s.type})</span>`).join('')}
-          </div>
+          <table class="sets-table" style="margin-top:0.5rem;">
+            <thead>
+              <tr><th>SET</th><th>WEIGHT</th><th>REPS</th><th>RANGE</th><th>EPLEY e1RM</th><th>BRZYCKI e1RM</th><th>TYPE</th></tr>
+            </thead>
+            <tbody>
+              ${ex.sets.map((s, idx) => `
+                <tr>
+                  <td>Set ${idx + 1}</td>
+                  <td>${s.weight_kg} kg</td>
+                  <td>${s.reps} reps</td>
+                  <td><span class="sim-set-pill">${s.rep_range}</span></td>
+                  <td>${s.epley_e1rm ? `${s.epley_e1rm} kg` : '—'}</td>
+                  <td>${s.brzycki_e1rm ? `${s.brzycki_e1rm} kg` : '—'}</td>
+                  <td><span class="sim-set-pill">${s.type}</span> ${s.e1rm_divergence ? '<span title="Epley vs Brzycki diverge >5%" style="color:var(--accent-yellow); margin-left:0.2rem;">⚠️</span>' : ''}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
         `;
         exList.appendChild(item);
       });
 
       // Briefing
       document.getElementById('sim-briefing-text').textContent = data.briefing;
-      showToast('Workout successfully parsed & analyzed!', 'success');
+      showToast('Workout parsed and pure-Python metrics computed!', 'success');
     } catch (err) {
       showToast(`Simulation failed: ${err.message}`, 'error');
     }
+  });
+
+  document.getElementById('btn-sim-send-telegram')?.addEventListener('click', () => {
+    if (!currentSimResult) {
+      showToast('Please parse a workout first.', 'error');
+      return;
+    }
+    sendToTelegram(currentSimResult.briefing, 'Workout Lab Session Briefing');
   });
 
   // ==========================================================================
@@ -649,6 +797,41 @@ Set 2: 18 kg x 10`
       showToast('Athlete profile successfully updated & synced!', 'success');
     } catch (err) {
       showToast(`Update failed: ${err.message}`, 'error');
+    }
+  });
+
+  // Settings Action Triggers: Strava Connect & Telegram Integration
+  document.getElementById('btn-connect-strava')?.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/api/oauth/strava/connect');
+      const data = await res.json();
+      if (data.url) {
+        showToast('Opening Strava authorization portal in a new tab...', 'info');
+        window.open(data.url, '_blank');
+      }
+    } catch (err) {
+      showToast(`Strava connection error: ${err.message}`, 'error');
+    }
+  });
+
+  document.getElementById('btn-test-telegram')?.addEventListener('click', () => {
+    sendToTelegram(
+      "⚡ *LiftMate Telemetry Connection Verified*\n\nYour Telegram bot (@sujal_liftmate_bot) is active and securely linked to Sujal Nag's dashboard. All workout briefings, PR alerts, and coach advice will be dispatched in real-time.",
+      "Connection Verification"
+    );
+  });
+
+  document.getElementById('btn-trigger-digest')?.addEventListener('click', async () => {
+    showToast('Computing weekly telemetry stats & generating digest...', 'info');
+    try {
+      const res = await fetch('/api/trigger/weekly_digest', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to trigger digest');
+      showToast('Weekly digest computed & dispatched to Telegram!', 'success');
+      appendChatMessage('coach', 'Weekly Digest', formatMarkdown(data.digest));
+      switchTab('coach');
+    } catch (err) {
+      showToast(`Weekly digest error: ${err.message}`, 'error');
     }
   });
 

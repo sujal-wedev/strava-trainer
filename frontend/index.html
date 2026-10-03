@@ -342,16 +342,30 @@
             <div class="select-wrapper">
               <select id="chart-preset-select" class="clean-select">
                 <optgroup label="Strength Presets">
-                  <option value="s01">S01: Volume by Muscle Group</option>
+                  <option value="s01" selected>S01: Volume by Muscle Group</option>
                   <option value="s02">S02: Session Volume Progression</option>
                   <option value="s03">S03: Estimated 1RM Trend (Bench Press)</option>
+                  <option value="s04">S04: Set-by-Set Bar Breakdown</option>
+                  <option value="s05">S05: Session vs Previous Session</option>
+                  <option value="s06">S06: Weekly Sets vs Evidence Target (10–20 Band)</option>
+                  <option value="s07">S07: Rep-Range Mix Distribution</option>
+                  <option value="s08">S08: Personal Records Timeline</option>
                 </optgroup>
                 <optgroup label="Endurance Presets">
                   <option value="e01">E01: Heart Rate Zone Distribution</option>
+                  <option value="e03">E03: Pace & Heart Rate Dual Axis</option>
+                  <option value="e04">E04: Kilometer Splits Bar Chart</option>
+                  <option value="e05">E05: Aerobic Decoupling (Pa:HR)</option>
+                  <option value="e07">E07: Weekly Volume by HR Zone</option>
+                  <option value="e08">E08: 80/20 Polarized Zone Mix (Trailing 28 Days)</option>
+                  <option value="e09">E09: Cadence Over Time (170–185 Target Band)</option>
+                  <option value="e10">E10: Elevation Profile & Heart Rate</option>
                 </optgroup>
-                <optgroup label="Cross-Discipline Presets">
+                <optgroup label="Cross-Discipline & Recovery">
+                  <option value="x01">X01: Acute:Chronic Workload Ratio (ACWR) Timeline</option>
                   <option value="c02">C02: ACWR Workload Ratio Gauge</option>
-                  <option value="c03">C03: Training Split Distribution</option>
+                  <option value="c03">C03: Training Split Distribution (Lifting vs Running)</option>
+                  <option value="x02">X02: 12-Week Consistency Heatmap Calendar</option>
                 </optgroup>
               </select>
               <button class="btn btn-outline btn-sm" id="btn-refresh-chart">Refresh Chart</button>
@@ -435,22 +449,45 @@ Set 2: 36 kg x 8"></textarea>
               <div class="sim-summary-row">
                 <div class="summary-tile">
                   <span class="st-label">TOTAL VOLUME</span>
-                  <span class="st-val" id="sim-total-volume">0 kg</span>
+                  <span class="st-val text-accent" id="sim-total-volume">0 kg</span>
                 </div>
                 <div class="summary-tile">
-                  <span class="st-label">EXERCISES</span>
-                  <span class="st-val" id="sim-exercise-count">0</span>
+                  <span class="st-label">WORKING SETS</span>
+                  <span class="st-val" id="sim-working-sets">0</span>
                 </div>
                 <div class="summary-tile">
-                  <span class="st-label">WARNINGS</span>
-                  <span class="st-val" id="sim-warnings-count">0</span>
+                  <span class="st-label">PUSH / PULL</span>
+                  <span class="st-val" id="sim-push-pull">—</span>
+                </div>
+                <div class="summary-tile">
+                  <span class="st-label">UPPER / LOWER</span>
+                  <span class="st-val" id="sim-upper-lower">—</span>
+                </div>
+                <div class="summary-tile">
+                  <span class="st-label">DENSITY</span>
+                  <span class="st-val" id="sim-density">—</span>
+                </div>
+              </div>
+
+              <!-- Rep Range Distribution Bar -->
+              <div class="sim-rep-ranges" id="sim-rep-ranges-bar" style="margin-bottom: 1rem;">
+                <div class="rep-range-pills">
+                  <span class="pill-badge" id="pill-strength-reps">Strength (1–5): 0 sets</span>
+                  <span class="pill-badge" id="pill-hypertrophy-reps">Hypertrophy (6–12): 0 sets</span>
+                  <span class="pill-badge" id="pill-endurance-reps">Endurance (13+): 0 sets</span>
                 </div>
               </div>
 
               <div class="sim-parsed-items" id="sim-exercises-list"></div>
 
               <div class="sim-briefing-panel">
-                <span class="sb-label">GENERATED BRIEFING</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span class="sb-label">GENERATED BRIEFING</span>
+                  <button type="button" class="btn btn-secondary btn-xs" id="btn-sim-send-telegram">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    Send to Telegram
+                  </button>
+                </div>
                 <p id="sim-briefing-text" class="sb-text"></p>
               </div>
             </div>
@@ -538,6 +575,9 @@ Set 2: 36 kg x 8"></textarea>
                   <div>
                     <span class="int-name">Strava API</span>
                     <span class="int-desc">Athlete ID: 668540745 • App: 284289</span>
+                    <div style="margin-top:0.4rem;">
+                      <button type="button" class="btn btn-outline btn-xs" id="btn-connect-strava">Authorize Strava Account &rarr;</button>
+                    </div>
                   </div>
                 </div>
                 <span class="pill-badge pill-success">Configured</span>
@@ -549,6 +589,10 @@ Set 2: 36 kg x 8"></textarea>
                   <div>
                     <span class="int-name">Telegram Bot</span>
                     <span class="int-desc">@sujal_liftmate_bot • Chat ID: 1234341067</span>
+                    <div style="display:flex; gap:0.4rem; margin-top:0.4rem; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-outline btn-xs" id="btn-test-telegram">Send Test Notification</button>
+                      <button type="button" class="btn btn-secondary btn-xs" id="btn-trigger-digest">Dispatch Weekly Digest</button>
+                    </div>
                   </div>
                 </div>
                 <span class="pill-badge pill-success">Active</span>
@@ -604,7 +648,13 @@ Set 2: 36 kg x 8"></textarea>
             </div>
             <h3 class="modal-headline" id="modal-activity-title">Workout Detail</h3>
           </div>
-          <button class="modal-close" id="btn-close-modal" aria-label="Close dialog">&times;</button>
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <button type="button" class="btn btn-secondary btn-xs" id="btn-modal-send-telegram">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              Send to Telegram
+            </button>
+            <button class="modal-close" id="btn-close-modal" aria-label="Close dialog">&times;</button>
+          </div>
         </div>
 
         <div class="modal-content-scroll" id="modal-activity-body">
