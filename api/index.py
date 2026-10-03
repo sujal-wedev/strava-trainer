@@ -19,7 +19,7 @@ from app.storage.oauth_state import consume_oauth_state
 from app.storage.oauth_tokens import PostgresTokenStore
 from app.storage.queue import QStashQueue
 from app.storage.redis import UpstashRedis
-from app.web import cron, oauth_callback, strava_webhook, telegram_webhook
+from app.web import cron, frontend, oauth_callback, strava_webhook, telegram_webhook
 from app.web import worker as worker_module
 from app.web.types import WebResponse
 
@@ -64,12 +64,43 @@ def _route_get(path: str, environ: dict) -> WebResponse:
         _telegram.send_markdown(settings.telegram_owner_chat_id, cron.weekly_digest_text(**stats))
         return WebResponse.json(200, stats)
 
-    if path in ("/", "/health"):
+    if path in ("/", "/index.html") or path.startswith("/assets/") or path in ("/style.css", "/app.js", "/favicon.ico"):
+        return frontend.handle_static(path)
+
+    if path == "/api/dashboard":
+        return frontend.handle_dashboard(_db, settings)
+
+    if path == "/api/activities":
+        return frontend.handle_activities(_db, read_query(environ))
+
+    if path.startswith("/api/activity/"):
+        try:
+            act_id = int(path.split("/")[-1])
+            return frontend.handle_activity_detail(_db, act_id)
+        except ValueError:
+            return WebResponse.json(400, {"error": "invalid activity id"})
+
+    if path == "/api/prs":
+        return frontend.handle_prs(_db)
+
+    if path.startswith("/api/chart/"):
+        chart_id = path.split("/")[-1]
+        return frontend.handle_chart(chart_id, _db)
+
+    if path == "/health":
         return WebResponse.json(200, {
             "status": "healthy",
             "app": "LiftMate",
-            "version": "0.1.0",
+            "version": "1.0.0",
             "endpoints": [
+                "/",
+                "/api/dashboard",
+                "/api/activities",
+                "/api/prs",
+                "/api/chat",
+                "/api/profile",
+                "/api/simulate-workout",
+                "/api/chart/{chart_id}",
                 "/api/webhook/strava",
                 "/api/webhook/telegram",
                 "/api/oauth/strava/callback",
@@ -83,6 +114,14 @@ def _route_get(path: str, environ: dict) -> WebResponse:
 
 
 def _route_post(path: str, environ: dict) -> WebResponse:
+    if path == "/api/chat":
+        return frontend.handle_chat(read_body(environ), _worker_deps, settings)
+
+    if path == "/api/profile":
+        return frontend.handle_update_profile(_db, read_body(environ))
+
+    if path == "/api/simulate-workout":
+        return frontend.handle_simulate_workout(read_body(environ))
     if path == "/api/webhook/strava":
         return strava_webhook.handle_post(
             read_body(environ),

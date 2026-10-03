@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiftMate // AI Hybrid Athlete Coach & Telemetry</title>
+  <meta name="description" content="Intelligent fitness telemetry, strength & endurance analytics, and AI coaching for hybrid athletes powered by Strava and Hevy data.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="dark-theme">
+  <!-- Toast notification system -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <a href="/" class="brand-link" id="brand-logo-link">
+          <img src="/assets/logo.jpg" alt="LiftMate Logo" class="brand-logo-img">
+          <div class="brand-text">
+            <span class="brand-title">LIFTMATE</span>
+            <span class="brand-tag">HYBRID TELEMETRY</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="nav-tabs" id="main-nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="dashboard" id="tab-nav-dashboard" role="tab" aria-selected="true">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Dashboard
+        </button>
+        <button class="nav-tab" data-tab="coach" id="tab-nav-coach" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 10h.01M12 10h.01M16 10h.01"></path></svg>
+          AI Coach
+        </button>
+        <button class="nav-tab" data-tab="activities" id="tab-nav-activities" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Activities
+        </button>
+        <button class="nav-tab" data-tab="prs" id="tab-nav-prs" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"></path><path d="M14 14.66V17c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+          PR Board
+        </button>
+        <button class="nav-tab" data-tab="charts" id="tab-nav-charts" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Charts & Presets
+        </button>
+        <button class="nav-tab" data-tab="simulator" id="tab-nav-simulator" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          Workout Lab
+        </button>
+        <button class="nav-tab" data-tab="settings" id="tab-nav-settings" role="tab" aria-selected="false">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Settings
+        </button>
+      </nav>
+
+      <div class="header-right">
+        <div class="status-indicator-pill" id="system-status-pill" title="System Status: Fully Operational">
+          <span class="status-dot pulse"></span>
+          <span class="status-label">LIVE SYNC</span>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-quick-ask">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Ask Coach
+        </button>
+      </div>
+    </header>
+
+    <!-- Main View Content Area -->
+    <main class="main-content" id="main-view-container">
+      <h1 class="sr-only">LIFTMATE PERFORMANCE PLATFORM</h1>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section class="tab-pane active" id="pane-dashboard" role="tabpanel" aria-labelledby="tab-nav-dashboard">
+        <!-- Hero Athlete Card & Performance Matrix Banner -->
+        <div class="hero-banner-card">
+          <div class="hero-banner-content">
+            <div class="hero-badge">HYBRID TELEMETRY ACTIVE</div>
+            <h2 class="hero-title" id="hero-athlete-name">Sujal Nag</h2>
+            <div class="hero-goal-pill" id="hero-athlete-goal">Target: Hybrid — lifting + running, general fitness</div>
+            
+            <div class="biometrics-strip" id="biometrics-strip">
+              <div class="bio-item">
+                <span class="bio-label">MAX HR</span>
+                <span class="bio-val" id="bio-max-hr">192 <small>bpm</small></span>
+              </div>
+              <div class="bio-divider"></div>
+              <div class="bio-item">
+                <span class="bio-label">RESTING HR</span>
+                <span class="bio-val" id="bio-resting-hr">52 <small>bpm</small></span>
+              </div>
+              <div class="bio-divider"></div>
+              <div class="bio-item">
+                <span class="bio-label">LTHR</span>
+                <span class="bio-val" id="bio-lthr">171 <small>bpm</small></span>
+              </div>
+              <div class="bio-divider"></div>
+              <div class="bio-item">
+                <span class="bio-label">BODYWEIGHT</span>
+                <span class="bio-val" id="bio-bodyweight">78.5 <small>kg</small></span>
+              </div>
+              <div class="bio-divider"></div>
+              <div class="bio-item">
+                <span class="bio-label">ACWR LOAD</span>
+                <span class="bio-val text-accent" id="bio-acwr">1.08 <small>SWEET SPOT</small></span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-banner-art">
+            <img src="/assets/hero_banner.jpg" alt="Performance telemetry telemetry" class="hero-art-img">
+          </div>
+        </div>
+
+        <!-- KPI Performance Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card" id="kpi-volume-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Weekly Lifting Volume</span>
+              <span class="kpi-icon-badge strength">🏋️</span>
+            </div>
+            <div class="kpi-value" id="kpi-weekly-volume">32,450 <span class="kpi-unit">kg</span></div>
+            <div class="kpi-footer text-success">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              <span>+12.4% vs last week</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpi-distance-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Weekly Endurance Mileage</span>
+              <span class="kpi-icon-badge endurance">🏃</span>
+            </div>
+            <div class="kpi-value" id="kpi-weekly-distance">18.27 <span class="kpi-unit">km</span></div>
+            <div class="kpi-footer text-muted">
+              <span>2 logged runs (Zone 2 & Intervals)</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpi-streak-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Active Workload ACWR</span>
+              <span class="kpi-icon-badge cross">⚡</span>
+            </div>
+            <div class="kpi-value" id="kpi-acwr-gauge">1.08 <span class="kpi-unit">ratio</span></div>
+            <div class="kpi-footer text-accent">
+              <span>Optimal progression zone (0.8–1.3)</span>
+            </div>
+          </div>
+
+          <div class="kpi-card" id="kpi-prs-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Tracked Personal Records</span>
+              <span class="kpi-icon-badge pr">🏆</span>
+            </div>
+            <div class="kpi-value" id="kpi-active-prs">6 <span class="kpi-unit">bests</span></div>
+            <div class="kpi-footer text-accent">
+              <span>New Bench Press e1RM (120kg)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Two-Column Grid: Activities & Quick Analytics -->
+        <div class="dashboard-split-grid">
+          <!-- Left Column: Recent Activities Stream -->
+          <div class="panel-card" id="recent-activities-panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h3 class="panel-title">Recent Workouts & Briefings</h3>
+                <span class="panel-subtitle">Parsed from Strava & Hevy syncs</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="btn-view-all-activities">View All &rarr;</button>
+            </div>
+            <div class="activity-feed-list" id="dashboard-activity-feed">
+              <!-- Dynamically populated via app.js -->
+            </div>
+          </div>
+
+          <!-- Right Column: Training Balance & Muscle Distribution -->
+          <div class="panel-card" id="training-analytics-panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h3 class="panel-title">Discipline & Muscle Split</h3>
+                <span class="panel-subtitle">Calculated pure-Python mechanics</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="btn-open-charts-tab">Chart Studio &rarr;</button>
+            </div>
+
+            <!-- Training Balance Bar -->
+            <div class="balance-container">
+              <div class="balance-labels">
+                <span class="balance-label strength">Weight Training (65%)</span>
+                <span class="balance-label endurance">Endurance (35%)</span>
+              </div>
+              <div class="balance-bar">
+                <div class="balance-fill-strength" style="width: 65%;"></div>
+                <div class="balance-fill-endurance" style="width: 35%;"></div>
+              </div>
+            </div>
+
+            <!-- Muscle Volume Breakdown Bars -->
+            <div class="muscle-bars-list" id="dashboard-muscle-bars">
+              <div class="muscle-bar-item">
+                <div class="muscle-bar-info">
+                  <span class="muscle-name">Chest</span>
+                  <span class="muscle-vol">8,400 kg (12 sets)</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width: 85%; background: var(--accent-orange);"></div></div>
+              </div>
+              <div class="muscle-bar-item">
+                <div class="muscle-bar-info">
+                  <span class="muscle-name">Quads & Glutes</span>
+                  <span class="muscle-vol">7,200 kg (10 sets)</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width: 74%; background: var(--accent-cyan);"></div></div>
+              </div>
+              <div class="muscle-bar-item">
+                <div class="muscle-bar-info">
+                  <span class="muscle-name">Back & Lats</span>
+                  <span class="muscle-vol">6,800 kg (10 sets)</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width: 70%; background: var(--accent-green);"></div></div>
+              </div>
+              <div class="muscle-bar-item">
+                <div class="muscle-bar-info">
+                  <span class="muscle-name">Shoulders</span>
+                  <span class="muscle-vol">4,800 kg (8 sets)</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width: 50%; background: var(--accent-yellow);"></div></div>
+              </div>
+            </div>
+
+            <!-- Quick AI Takeaway Card -->
+            <div class="coach-takeaway-card" id="dashboard-coach-takeaway">
+              <div class="takeaway-badge">COACH'S DAILY TAKEAWAY</div>
+              <p class="takeaway-text">"Your Bench Press e1RM peaked at 120kg yesterday. With your threshold run 2 days prior, upper body nervous system readiness was prime. Prioritize back volume and keep tomorrow's run strictly in Zone 2."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: AI COACH CONSOLE -->
+      <section class="tab-pane" id="pane-coach" role="tabpanel" aria-labelledby="tab-nav-coach">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="coach-avatar-group">
+              <div class="coach-avatar">
+                <img src="/assets/logo.jpg" alt="Coach Avatar">
+                <span class="online-indicator"></span>
+              </div>
+              <div>
+                <h3 class="coach-name">LiftMate AI Hybrid Coach</h3>
+                <span class="coach-status">Active Context: Hybrid Athlete • 30-min Memory Window</span>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button class="btn btn-outline btn-sm" id="btn-clear-chat">Clear History</button>
+            </div>
+          </div>
+
+          <!-- Suggested Query Chips -->
+          <div class="quick-prompts-bar">
+            <span class="prompts-label">Quick Inquiries:</span>
+            <button class="prompt-chip" data-prompt="What is my current Bench Press PR and e1RM?">🏋️ Bench Press PR</button>
+            <button class="prompt-chip" data-prompt="How has this week looked for my training volume?">📊 Weekly Volume</button>
+            <button class="prompt-chip" data-prompt="Analyze my balance between heavy lifting and running.">⚖️ Hybrid Balance</button>
+            <button class="prompt-chip" data-prompt="What workout should I focus on for my next session?">🎯 Next Workout Recommendation</button>
+            <button class="prompt-chip" data-prompt="How were my heart rate zones in my last run?">❤️ HR Zone Breakdown</button>
+          </div>
+
+          <!-- Messages Scroll Area -->
+          <div class="chat-messages" id="chat-messages-container">
+            <!-- Initial Coach Greeting -->
+            <div class="message-bubble coach">
+              <div class="bubble-header">
+                <span class="bubble-author">LiftMate Coach</span>
+                <span class="bubble-time">Just now</span>
+              </div>
+              <div class="bubble-content">
+                <p>Welcome back, Alex! I've analyzed your latest sessions: you crushed an estimated 1RM PR on Bench Press (120 kg) and maintained an optimal 1.08 ACWR workload ratio across your 32,450 kg lifted and 18.27 km run this week.</p>
+                <p>Ask me anything about your numbers, exercise bests, recovery recommendations, or tomorrow's session!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input Area -->
+          <form class="chat-input-bar" id="chat-form">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ask your coach anything about your PRs, volume, fatigue, or recovery..." autocomplete="off">
+            <button type="submit" class="btn btn-primary" id="btn-chat-send">
+              <span>Send</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 3: ACTIVITIES LIST & INSPECTOR -->
+      <section class="tab-pane" id="pane-activities" role="tabpanel" aria-labelledby="tab-nav-activities">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <h2 class="panel-title">Completed Workouts & Deep-Dive Briefings</h2>
+              <span class="panel-subtitle">Click any workout to view raw parsed sets, splits, and AI analysis</span>
+            </div>
+            <!-- Sport Filter Pills -->
+            <div class="filter-pills" id="activity-sport-filters">
+              <button class="filter-pill active" data-sport="all">All Disciplines</button>
+              <button class="filter-pill" data-sport="WeightTraining">🏋️ Weight Training</button>
+              <button class="filter-pill" data-sport="Run">🏃 Running</button>
+            </div>
+          </div>
+
+          <div class="activities-grid" id="full-activities-grid">
+            <!-- Populated via app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: PR TROPHY BOARD -->
+      <section class="tab-pane" id="pane-prs" role="tabpanel" aria-labelledby="tab-nav-prs">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <h2 class="panel-title">Personal Records & Hall of Fame</h2>
+              <span class="panel-subtitle">All-time heaviest loads, estimated 1RMs, and highest volume milestones</span>
+            </div>
+            <!-- Category Filter Pills -->
+            <div class="filter-pills" id="pr-category-filters">
+              <button class="filter-pill active" data-cat="all">All Lifts</button>
+              <button class="filter-pill" data-cat="Chest">Chest</button>
+              <button class="filter-pill" data-cat="Legs">Legs / Posterior</button>
+              <button class="filter-pill" data-cat="Shoulders">Shoulders</button>
+              <button class="filter-pill" data-cat="Back">Back</button>
+            </div>
+          </div>
+
+          <div class="prs-grid" id="prs-board-grid">
+            <!-- Populated via app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CHARTS & PRESET STUDIO -->
+      <section class="tab-pane" id="pane-charts" role="tabpanel" aria-labelledby="tab-nav-charts">
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <h2 class="panel-title">Matplotlib Visual Preset Studio</h2>
+              <span class="panel-subtitle">Real in-memory PNG renders produced by app/charts/ presets</span>
+            </div>
+            <div class="chart-controls">
+              <select id="chart-preset-select" class="form-select">
+                <optgroup label="Strength Presets">
+                  <option value="s01">S01: Volume by Muscle Group</option>
+                  <option value="s02">S02: Total Volume Trend</option>
+                  <option value="s03">S03: Estimated 1RM Trend (Bench)</option>
+                </optgroup>
+                <optgroup label="Endurance Presets">
+                  <option value="e01">E01: Heart Rate Zone Distribution</option>
+                </optgroup>
+                <optgroup label="Cross-Discipline Presets">
+                  <option value="c02">C02: ACWR Workload Ratio Gauge</option>
+                  <option value="c03">C03: Training Split Distribution</option>
+                </optgroup>
+              </select>
+              <button class="btn btn-outline btn-sm" id="btn-refresh-chart">Refresh</button>
+            </div>
+          </div>
+
+          <div class="chart-display-container">
+            <div class="chart-image-wrapper" id="chart-image-wrapper">
+              <img id="chart-preview-img" src="/api/chart/s01" alt="Matplotlib Telemetry Chart" class="chart-rendered-img">
+            </div>
+            <div class="chart-details-bar" id="chart-details-bar">
+              <div class="chart-info-item">
+                <span class="chart-info-label">PRESET IDENTIFIER</span>
+                <span class="chart-info-val" id="chart-info-id">s01_volume_by_muscle</span>
+              </div>
+              <div class="chart-info-item">
+                <span class="chart-info-label">ENGINE</span>
+                <span class="chart-info-val">Matplotlib Agg @ 1200x675 DPI 100</span>
+              </div>
+              <div class="chart-info-item">
+                <span class="chart-info-label">THEME</span>
+                <span class="chart-info-val">LiftMate Onyx Dark (#111318)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: WORKOUT SIMULATOR & PARSER LAB -->
+      <section class="tab-pane" id="pane-simulator" role="tabpanel" aria-labelledby="tab-nav-simulator">
+        <div class="simulator-layout">
+          <!-- Left: Input Area -->
+          <div class="panel-card simulator-input-card">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h2 class="panel-title">Hevy / Strava Description Parser</h2>
+                <span class="panel-subtitle">Test raw workout descriptions and view pure-Python parsed metrics</span>
+              </div>
+            </div>
+
+            <div class="simulator-presets-bar">
+              <span class="presets-label">Load Template:</span>
+              <button class="btn btn-ghost btn-sm" id="btn-template-push">Heavy Push</button>
+              <button class="btn btn-ghost btn-sm" id="btn-template-legs">Heavy Legs</button>
+              <button class="btn btn-ghost btn-sm" id="btn-template-pull">Pull & Back</button>
+            </div>
+
+            <form id="simulator-form" class="simulator-form">
+              <textarea id="simulator-text" class="simulator-textarea" rows="12" placeholder="Paste Hevy workout description here...
+Logged with hevyapp.com
+
+Bench Press (Barbell)
+Set 1: 60 kg x 10
+Set 2: 80 kg x 8
+Set 3: 100 kg x 6 (failure)
+
+Incline Dumbbell Press
+Set 1: 32 kg x 10
+Set 2: 34 kg x 8"></textarea>
+              <div class="simulator-actions">
+                <button type="submit" class="btn btn-primary" id="btn-run-simulation">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Parse & Run Metrics
+                </button>
+                <button type="button" class="btn btn-outline" id="btn-clear-simulation">Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Right: Output & Results -->
+          <div class="panel-card simulator-results-card">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h3 class="panel-title">Computed Telemetry & AI Briefing</h3>
+                <span class="panel-subtitle" id="sim-status-text">Awaiting workout input</span>
+              </div>
+            </div>
+
+            <div id="sim-results-empty" class="sim-empty-state">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <p>Paste or choose a workout template on the left, then click <strong>Parse & Run Metrics</strong> to see instant volume calculations, muscle mapping, and an AI coaching briefing.</p>
+            </div>
+
+            <div id="sim-results-content" class="sim-results-content hidden">
+              <!-- Summary KPIs -->
+              <div class="sim-kpi-row">
+                <div class="sim-kpi">
+                  <span class="sim-kpi-label">TOTAL VOLUME</span>
+                  <span class="sim-kpi-val" id="sim-total-volume">0 kg</span>
+                </div>
+                <div class="sim-kpi">
+                  <span class="sim-kpi-label">EXERCISES</span>
+                  <span class="sim-kpi-val" id="sim-exercise-count">0</span>
+                </div>
+                <div class="sim-kpi">
+                  <span class="sim-kpi-label">PARSER WARNINGS</span>
+                  <span class="sim-kpi-val" id="sim-warnings-count">0</span>
+                </div>
+              </div>
+
+              <!-- Exercises List -->
+              <div class="sim-exercises-list" id="sim-exercises-list"></div>
+
+              <!-- AI Briefing Box -->
+              <div class="sim-briefing-box">
+                <div class="sim-briefing-header">
+                  <span class="sim-briefing-badge">AI COACH BRIEFING</span>
+                </div>
+                <p id="sim-briefing-text" class="sim-briefing-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: SETTINGS & ATHLETE PROFILE -->
+      <section class="tab-pane" id="pane-settings" role="tabpanel" aria-labelledby="tab-nav-settings">
+        <div class="settings-grid">
+          <!-- Left: Profile Form -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h2 class="panel-title">Athlete Profile & Biometrics</h2>
+                <span class="panel-subtitle">Physiological baselines used for zone calculations and training load</span>
+              </div>
+            </div>
+
+            <form id="profile-settings-form" class="settings-form">
+              <div class="form-group">
+                <label for="setting-goal">Athlete Training Goal</label>
+                <input type="text" id="setting-goal" class="form-input" value="Hybrid — lifting + running, general fitness">
+                <small class="form-hint">Used by Gemini orchestrator and analysts to tailor all advice.</small>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="setting-max-hr">Max Heart Rate (bpm)</label>
+                  <input type="number" id="setting-max-hr" class="form-input" value="192" min="120" max="230">
+                </div>
+                <div class="form-group">
+                  <label for="setting-resting-hr">Resting Heart Rate (bpm)</label>
+                  <input type="number" id="setting-resting-hr" class="form-input" value="52" min="30" max="100">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="setting-lthr">Lactate Threshold HR (bpm)</label>
+                  <input type="number" id="setting-lthr" class="form-input" value="171" min="100" max="210">
+                </div>
+                <div class="form-group">
+                  <label for="setting-bodyweight">Bodyweight (kg)</label>
+                  <input type="number" step="0.1" id="setting-bodyweight" class="form-input" value="78.5" min="30" max="250">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="setting-weight-unit">Weight Unit</label>
+                  <select id="setting-weight-unit" class="form-select">
+                    <option value="kg" selected>Kilograms (kg)</option>
+                    <option value="lbs">Pounds (lbs)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="setting-distance-unit">Distance Unit</label>
+                  <select id="setting-distance-unit" class="form-select">
+                    <option value="km" selected>Kilometers (km)</option>
+                    <option value="miles">Miles (mi)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-save-profile">Save Profile Settings</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Right: System Diagnostics & Connected Services -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <h3 class="panel-title">System Architecture Diagnostics</h3>
+                <span class="panel-subtitle">Live health check of all LiftMate integrated services</span>
+              </div>
+            </div>
+
+            <div class="service-status-list" id="services-status-list">
+              <div class="service-item">
+                <div class="service-info">
+                  <div class="service-icon strava">🟧</div>
+                  <div>
+                    <span class="service-name">Strava Webhook API</span>
+                    <span class="service-sub">Athlete ID: 987654 • Sub ID: 987654</span>
+                  </div>
+                </div>
+                <span class="service-badge connected">CONNECTED</span>
+              </div>
+
+              <div class="service-item">
+                <div class="service-info">
+                  <div class="service-icon telegram">✈️</div>
+                  <div>
+                    <span class="service-name">Telegram Bot Client</span>
+                    <span class="service-sub">Owner Chat ID: Active</span>
+                  </div>
+                </div>
+                <span class="service-badge connected">ACTIVE</span>
+              </div>
+
+              <div class="service-item">
+                <div class="service-info">
+                  <div class="service-icon gemini">✨</div>
+                  <div>
+                    <span class="service-name">Gemini AI Models</span>
+                    <span class="service-sub">gemini-3.5-flash & gemini-3.1-flash-lite</span>
+                  </div>
+                </div>
+                <span class="service-badge connected">ENABLED</span>
+              </div>
+
+              <div class="service-item">
+                <div class="service-info">
+                  <div class="service-icon qstash">⚡</div>
+                  <div>
+                    <span class="service-name">Upstash QStash Queue</span>
+                    <span class="service-sub">Asynchronous Worker Pipeline</span>
+                  </div>
+                </div>
+                <span class="service-badge connected">CONFIGURED</span>
+              </div>
+
+              <div class="service-item">
+                <div class="service-info">
+                  <div class="service-icon postgres">🐘</div>
+                  <div>
+                    <span class="service-name">Supabase / Postgres Storage</span>
+                    <span class="service-sub">9 Schema Tables Applied</span>
+                  </div>
+                </div>
+                <span class="service-badge connected">READY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Workout Detail Modal Drawer -->
+    <div id="activity-detail-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-activity-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-badge" id="modal-sport-badge">WeightTraining</span>
+            <h3 class="modal-title" id="modal-activity-title">Heavy Push Day</h3>
+            <span class="modal-date" id="modal-activity-date">Oct 2, 2026</span>
+          </div>
+          <button class="modal-close-btn" id="btn-close-modal" aria-label="Close dialog">&times;</button>
+        </div>
+
+        <div class="modal-body" id="modal-activity-body">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
