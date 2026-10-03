@@ -79,7 +79,8 @@ python -c "import secrets; print(secrets.token_hex(16))"                        
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-pytest                          # 165+ tests, all pure logic — no live credentials needed
+pytest                          # 199 tests, all pure logic — no live credentials needed
+python run.py                   # Starts local development server on http://localhost:3000
 ```
 
 ### 4. Apply the database schema

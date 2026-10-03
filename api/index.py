@@ -64,6 +64,21 @@ def _route_get(path: str, environ: dict) -> WebResponse:
         _telegram.send_markdown(settings.telegram_owner_chat_id, cron.weekly_digest_text(**stats))
         return WebResponse.json(200, stats)
 
+    if path in ("/", "/health"):
+        return WebResponse.json(200, {
+            "status": "healthy",
+            "app": "LiftMate",
+            "version": "0.1.0",
+            "endpoints": [
+                "/api/webhook/strava",
+                "/api/webhook/telegram",
+                "/api/oauth/strava/callback",
+                "/api/worker",
+                "/api/cron/weekly_digest",
+                "/api/cron/purge_cache",
+            ],
+        })
+
     return WebResponse.json(404, {"error": "not found"})
 
 
@@ -111,3 +126,14 @@ def app(environ, start_response):
         response = WebResponse.json(405, {"error": "method not allowed"})
 
     return wsgi_response(response, start_response)
+ 
+ 
+if __name__ == "__main__":
+    import os
+    from wsgiref.simple_server import make_server
+ 
+    port = int(os.environ.get("PORT", 3000))
+    print(f">> LiftMate WSGI server running at http://localhost:{port} (press Ctrl+C to stop)")
+    with make_server("0.0.0.0", port, app) as httpd:
+        httpd.serve_forever()
+
