@@ -310,19 +310,25 @@ def _read_static_file(rel_path: str) -> tuple[bytes, str] | None:
     clean_path = rel_path.lstrip("/").replace("\\", "/")
     if clean_path in ("", "index.html"):
         target = FRONTEND_DIR / "index.html"
-    elif clean_path.startswith("assets/"):
-        target = FRONTEND_DIR / clean_path
-    elif clean_path in ("style.css", "app.js", "favicon.ico"):
-        target = FRONTEND_DIR / clean_path
     else:
         target = FRONTEND_DIR / clean_path
+        if target.is_dir():
+            target = target / "index.html"
 
     if not target.exists() or not target.is_file():
         alt = Path(__file__).resolve().parent.parent.parent / "public" / (clean_path if clean_path else "index.html")
+        if alt.is_dir():
+            alt = alt / "index.html"
         if alt.exists() and alt.is_file():
             target = alt
         else:
-            return None
+            fallback = FRONTEND_DIR / "200.html"
+            if not fallback.exists():
+                fallback = Path(__file__).resolve().parent.parent.parent / "public" / "200.html"
+            if fallback.exists() and fallback.is_file():
+                target = fallback
+            else:
+                return None
 
     content_type, _ = mimetypes.guess_type(str(target))
     if not content_type:

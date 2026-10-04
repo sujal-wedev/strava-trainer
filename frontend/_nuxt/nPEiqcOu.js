@@ -1,0 +1,1 @@
+import{_ as e,o as t,k as o,bp as s}from"./7PRPeixj.js";const r={},c={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function l(a,n){return t(),o("div",c,[s(a.$slots,"default")])}const d=e(r,[["render",l]]);export{d as default};

@@ -18,3 +18,7 @@ build/
 .vercel/
 .vercel
 
+
+node_modules/
+.nuxt/
+.output/

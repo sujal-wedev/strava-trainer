@@ -67,7 +67,7 @@ def _route_get(path: str, environ: dict) -> WebResponse:
         _telegram.send_markdown(settings.telegram_owner_chat_id, cron.weekly_digest_text(**stats))
         return WebResponse.json(200, stats)
 
-    if path in ("/", "/index.html") or path.startswith("/assets/") or path in ("/style.css", "/app.js", "/favicon.ico"):
+    if not path.startswith("/api/") and path != "/health":
         return frontend.handle_static(path)
 
     if path == "/api/dashboard":
